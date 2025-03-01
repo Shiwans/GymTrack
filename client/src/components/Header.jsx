@@ -38,7 +38,7 @@ const Header = () => {
             <li><Link to="/about" className="hover:text-orange-400 transition">About</Link></li>
             <li><Link to="/attendance" className="hover:text-orange-400 transition">Attendance</Link></li>
             <li><Link to="/data" className="hover:text-orange-400 transition">Data</Link></li>
-            <li><Link to="/leaderboard" className="hover:text-orange-400 transition">Leaderboard</Link></li>
+            {/* <li><Link to="/leaderboard" className="hover:text-orange-400 transition">Leaderboard</Link></li> */}
           </>
         ) : (
           <>

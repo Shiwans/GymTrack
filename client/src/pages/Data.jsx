@@ -1,255 +1,8 @@
-// import * as React from 'react';
-// import { BarChart } from '@mui/x-charts/BarChart';
-// import { axisClasses } from '@mui/x-charts/ChartsAxis';
-// // import { dataset, valueFormatter } from '../dataset/weather';
-// import Paper from '@mui/material/Paper';
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableCell from '@mui/material/TableCell';
-// import TableContainer from '@mui/material/TableContainer';
-// import TableHead from '@mui/material/TableHead';
-// import TablePagination from '@mui/material/TablePagination';
-// import TableRow from '@mui/material/TableRow';
-
-//in bar chart show holidays total days and total day's present in there
-// const dataset = [
-//   {
-//     london: 59,
-//     paris: 57,
-//     newYork: 86,
-//     seoul: 21,
-//     month: 'Jan',
-//   },
-//   {
-//     london: 50,
-//     paris: 52,
-//     newYork: 78,
-//     seoul: 28,
-//     month: 'Feb',
-//   },
-//   {
-//     london: 47,
-//     paris: 53,
-//     newYork: 106,
-//     seoul: 41,
-//     month: 'Mar',
-//   },
-//   {
-//     london: 54,
-//     paris: 56,
-//     newYork: 92,
-//     seoul: 73,
-//     month: 'Apr',
-//   },
-//   {
-//     london: 57,
-//     paris: 69,
-//     newYork: 92,
-//     seoul: 99,
-//     month: 'May',
-//   },
-//   {
-//     london: 60,
-//     paris: 63,
-//     newYork: 103,
-//     seoul: 144,
-//     month: 'June',
-//   },
-//   {
-//     london: 59,
-//     paris: 60,
-//     newYork: 105,
-//     seoul: 319,
-//     month: 'July',
-//   },
-//   {
-//     london: 65,
-//     paris: 60,
-//     newYork: 106,
-//     seoul: 249,
-//     month: 'Aug',
-//   },
-//   {
-//     london: 51,
-//     paris: 51,
-//     newYork: 95,
-//     seoul: 131,
-//     month: 'Sept',
-//   },
-//   {
-//     london: 60,
-//     paris: 65,
-//     newYork: 97,
-//     seoul: 55,
-//     month: 'Oct',
-//   },
-//   {
-//     london: 67,
-//     paris: 64,
-//     newYork: 76,
-//     seoul: 48,
-//     month: 'Nov',
-//   },
-//   {
-//     london: 61,
-//     paris: 70,
-//     newYork: 103,
-//     seoul: 25,
-//     month: 'Dec',
-//   },
-// ];
-
-// function valueFormatter(value) {
-//   return `${value}mm`;
-// }
-
-// const chartSetting = {
-//   yAxis: [
-//     {
-//       label: 'rainfall (mm)',
-//     },
-//   ],
-//   width: 500,
-//   height: 300,
-//   sx: {
-//     [`.${axisClasses.left} .${axisClasses.label}`]: {
-//       transform: 'translate(-20px, 0)',
-//     },
-//   },
-// };
-
-// const columns = [
-//   { id: 'name', label: 'Name', minWidth: 170 },
-//   { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-//   {
-//     id: 'population',
-//     label: 'Population',
-//     minWidth: 170,
-//     align: 'right',
-//     format: (value) => value.toLocaleString('en-US'),
-//   },
-//   {
-//     id: 'size',
-//     label: 'Size\u00a0(km\u00b2)',
-//     minWidth: 170,
-//     align: 'right',
-//     format: (value) => value.toLocaleString('en-US'),
-//   },
-//   {
-//     id: 'density',
-//     label: 'Density',
-//     minWidth: 170,
-//     align: 'right',
-//     format: (value) => value.toFixed(2),
-//   },
-// ];
-
-// function createData(name, code, population, size) {
-//   const density = population / size;
-//   return { name, code, population, size, density };
-// }
-
-// const rows = [
-//   createData('India', 'IN', 1324171354, 3287263),
-//   createData('China', 'CN', 1403500365, 9596961),
-//   createData('Italy', 'IT', 60483973, 301340),
-//   createData('United States', 'US', 327167434, 9833520),
-//   createData('Canada', 'CA', 37602103, 9984670),
-//   createData('Australia', 'AU', 25475400, 7692024),
-//   createData('Germany', 'DE', 83019200, 357578),
-//   createData('Ireland', 'IE', 4857000, 70273),
-//   createData('Mexico', 'MX', 126577691, 1972550),
-//   createData('Japan', 'JP', 126317000, 377973),
-//   createData('France', 'FR', 67022000, 640679),
-//   createData('United Kingdom', 'GB', 67545757, 242495),
-//   createData('Russia', 'RU', 146793744, 17098246),
-//   createData('Nigeria', 'NG', 200962417, 923768),
-//   createData('Brazil', 'BR', 210147125, 8515767),
-// ];
-
-// export default function Data() {
-//   const [page, setPage] = React.useState(0);
-//   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-//   const handleChangePage = (event, newPage) => {
-//     setPage(newPage);
-//   };
-
-//   const handleChangeRowsPerPage = (event) => {
-//     setRowsPerPage(+event.target.value);
-//     setPage(0);
-//   };
-
-//   return (
-//     <>
-//     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-//       <TableContainer sx={{ maxHeight: 440 }}>
-//         <Table stickyHeader aria-label="sticky table">
-//           <TableHead>
-//             <TableRow>
-//               {columns.map((column) => (
-//                 <TableCell
-//                   key={column.id}
-//                   align={column.align}
-//                   style={{ minWidth: column.minWidth }}
-//                 >
-//                   {column.label}
-//                 </TableCell>
-//               ))}
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {rows
-//               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-//               .map((row) => {
-//                 return (
-//                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-//                     {columns.map((column) => {
-//                       const value = row[column.id];
-//                       return (
-//                         <TableCell key={column.id} align={column.align}>
-//                           {column.format && typeof value === 'number'
-//                             ? column.format(value)
-//                             : value}
-//                         </TableCell>
-//                       );
-//                     })}
-//                   </TableRow>
-//                 );
-//               })}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-//       <TablePagination
-//         rowsPerPageOptions={[10, 25, 100]}
-//         component="div"
-//         count={rows.length}
-//         rowsPerPage={rowsPerPage}
-//         page={page}
-//         onPageChange={handleChangePage}
-//         onRowsPerPageChange={handleChangeRowsPerPage}
-//       />
-//     </Paper>
-
-//     <BarChart
-//       dataset={dataset}
-//       xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
-//       series={[
-//         { dataKey: 'london', label: 'London', valueFormatter },
-//         { dataKey: 'paris', label: 'Paris', valueFormatter },
-//         { dataKey: 'newYork', label: 'New York', valueFormatter },
-//         { dataKey: 'seoul', label: 'Seoul', valueFormatter },
-//       ]}
-//       {...chartSetting}
-//     />
-//     </>
-//   );
-// }
-
-//frontend ka data
-//for ss 
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import axios from "axios"
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const attendanceData = [
   { month: "Jan", present: 20, holidays: 5 },
@@ -267,13 +20,32 @@ const lastAttendanceRecords = [
   { date: "8th Aug 2024", shift: "Evening", status: "Present" },
 ];
 
-const upcomingHolidays = [
-  { date: "15th Aug 2024", reason: "Independence Day", shift: "Both" },
-  { date: "2nd Oct 2024", reason: "Gandhi Jayanti", shift: "Morning" },
-  { date: "25th Dec 2024", reason: "Christmas", shift: "Both" },
-];
-
 export default function MemberDashboard() {
+  const [holidays, setHolidays] = useState([]);
+  const { authRequest,token } = useAuth();
+
+  useEffect(() => {
+    const fetchHolidays = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACK_URL}/admin/holidays`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include token in headers
+            },
+          }
+        );
+        setHolidays(response.data);
+      } catch (error) {
+        console.error('Error fetching holidays:', error);
+        // ... handle error (e.g., display error message)
+      }
+    };
+  
+    fetchHolidays();
+  }, [token]);
+  
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4 bg-gray-300">
       {/* Membership Details */}
@@ -341,7 +113,7 @@ export default function MemberDashboard() {
       </Card>
 
       {/* Upcoming Holidays */}
-      <Card sx={{ gridColumn: "span 2", padding: 2 }}>
+      {/* <Card sx={{ gridColumn: "span 2", padding: 2 }}>
         <CardHeader title="Upcoming Holidays" />
         <CardContent>
           <table className="w-full border-collapse border border-gray-300 text-center">
@@ -353,17 +125,38 @@ export default function MemberDashboard() {
               </tr>
             </thead>
             <tbody>
-              {upcomingHolidays.map((holiday, index) => (
-                <tr key={index} className="border">
-                  <td className="border p-2">{holiday.date}</td>
-                  <td className="border p-2">{holiday.reason}</td>
-                  <td className="border p-2">{holiday.shift}</td>
-                </tr>
-              ))}
+            {holidays.map((holiday) => (
+              <tr key={holiday._id} className="border-t">
+                <td>{new Date(holiday.date).toLocaleDateString()}</td>
+                <td>{holiday.reason}</td>
+                <td>{holiday.shift}</td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </CardContent>
-      </Card>
+      </Card> */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h3 className="text-lg font-semibold mb-4">Holidays List</h3>
+        <table className="w-full border">
+          <thead>
+            <tr className="bg-gray-100 text-left">
+              <th>Date</th>
+              <th>Reason</th>
+              <th>Shift</th>
+            </tr>
+          </thead>
+          <tbody>
+            {holidays.map((holiday) => (
+              <tr key={holiday._id} className="border-t">
+                <td>{new Date(holiday.date).toLocaleDateString()}</td>
+                <td>{holiday.reason}</td>
+                <td>{holiday.shift}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

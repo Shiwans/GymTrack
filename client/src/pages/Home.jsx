@@ -4,7 +4,9 @@ import placeleft from "../assets/placeleft.png";
 import placefull from "../assets/placefull.png";
 import placeright from "../assets/placeright.png";
 import gymguy from '../assets/gym-bg-1.png'
-
+import q from '../assets/q.jpg'
+import r from '../assets/r.jpg'
+import s from '../assets/Erick.jpg'
 const HomePage = () => {
   return (
     <div className="home-container">
@@ -29,13 +31,13 @@ const HomePage = () => {
       <section className="success-stories-section">
         <div className="success-content">
           <div className="success-text">
-            <h2>Inspiring Success Stories from FitLife Studio Members</h2>
+            <h2>Inspiring Success Stories from gymMembers</h2>
             <p>
-              At FitLife Studio, we celebrate the incredible journeys of our
+              At Gym, we celebrate the incredible journeys of our
               members. From weight loss triumphs and muscle gain milestones to
               enhanced well-being and newfound confidence, our members' success
               stories highlight the power of commitment and community. Explore
-              these inspiring testimonials and see how FitLife Studio can help
+              these inspiring testimonials and see how gymcan help
               you reach your fitness goals.
             </p>
             <button className="join-today-btn">Join Today</button>
@@ -64,7 +66,7 @@ const HomePage = () => {
       <section className="testimonials-section">
         <h2>Real Voices, Real Transformations</h2>
         <p className="testimonials-subtitle">
-          See How FitLife Studio Has Helped Our Members Achieve Their Fitness
+          See How gym Has Helped Our Members Achieve Their Fitness
           Goals and Transform Their Lives Through Expert Training and Supportive
           Community
         </p>
@@ -73,13 +75,13 @@ const HomePage = () => {
           <div className="testimonial-card">
             <div className="star-rating">★★★★★</div>
             <p className="testimonial-text">
-              Joining FitLife Studio was the best decision I ever made for my
+              Joining gym was the best decision I ever made for my
               health. The trainers are incredibly supportive, and the
               personalized programs have helped me achieve results!
             </p>
             <div className="testimonial-author">
               <img
-                src="/api/placeholder/50/50"
+                src={q}
                 alt="John Doe"
                 className="author-img"
               />
@@ -93,13 +95,13 @@ const HomePage = () => {
           <div className="testimonial-card">
             <div className="star-rating">★★★★★</div>
             <p className="testimonial-text">
-              FitLife Studio's group classes are so much fun and motivating.
+              Gym Studio group classes are so much fun and motivating.
               I've lost 20 pounds and gained a ton of confidence. The community
               here is amazing.
             </p>
             <div className="testimonial-author">
               <img
-                src="/api/placeholder/50/50"
+                src={r}
                 alt="Sarah Smith"
                 className="author-img"
               />
@@ -113,13 +115,13 @@ const HomePage = () => {
           <div className="testimonial-card">
             <div className="star-rating">★★★★★</div>
             <p className="testimonial-text">
-              The holistic approach at FitLife Studio has improved my overall
+              The holistic approach at gym has improved my overall
               well-being. The combination of strength training, cardio, and
               wellness programs has been life-changing.
             </p>
             <div className="testimonial-author">
               <img
-                src="/api/placeholder/50/50"
+                src={s}
                 alt="Mike Johnson"
                 className="author-img"
               />
@@ -137,7 +139,7 @@ const HomePage = () => {
         <div className="cta-content">
           <h2>Take the First Step Towards a Healthier You</h2>
           <p>
-            Join FitLife Studio Today and Transform Your Life with Expert
+            Join gymToday and Transform Your Life with Expert
             Guidance, Personalized Programs, and a Supportive Community. Your
             Fitness Journey Starts Now!
           </p>
