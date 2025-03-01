@@ -1,27 +1,29 @@
 import jwt from "jsonwebtoken";
+import Token from "../Models/Token.js";
 
-const adminAuth = (req, res, next) => {
-    const token = req.cookies?.token;
+const adminAuth = async (req, res, next) => {
+  const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return res.status(401).json({ success: false, msg: "Unauthorized: No token provided" });
+    return res.status(401).json({ success: false, message: "Unauthorized: No token provided" });
   }
 
   try {
+    const tokenExists = await Token.findOne({ token });
+    if (!tokenExists) {
+      return res.status(401).json({ success: false, message: "Invalid or expired token" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!decoded || !decoded.role) {
-      return res.status(401).json({ success: false, message: "Invalid token. Please log in again." });
-    }
-    
-    
+
     if (decoded.role !== "admin") {
-      return res.status(403).json({ success: false,  message: "Forbidden: Not an admin" });
+      return res.status(403).json({ success: false, message: "Forbidden: Not an admin" });
     }
-    console.log("token form mmiddleare admin auth  real",decoded)
+
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ success: false, msg: "Unauthorized: Invalid token" });
+    return res.status(401).json({ success: false, message: "Unauthorized: Invalid token" });
   }
 };
 

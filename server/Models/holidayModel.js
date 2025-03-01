@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const holidaySchema = new mongoose.Schema({
   date: { 
@@ -12,4 +12,5 @@ const holidaySchema = new mongoose.Schema({
   shift:{type:String,  enum: ['morning', 'evening','both'],required:true}
 }, { timestamps: true });
 
-module.exports = mongoose.model('Holiday', holidaySchema);
+const Holiday  =mongoose.model('Holiday', holidaySchema);
+export default Holiday;

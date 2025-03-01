@@ -246,7 +246,7 @@
 //   );
 // }
 
-
+//frontend ka data
 //for ss 
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";

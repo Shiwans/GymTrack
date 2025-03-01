@@ -4,43 +4,45 @@ import userModel from "../Models/userModel.js";
 import transporter from "../config/nodemailer.js";
 import dotenv from "dotenv";
 dotenv.config();
+import Token from "../Models/Token.js"
 
 export const loginUser = async (req, res) => {
-  // console.log("Login User Called");
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .status(400)
-      .json({ success: false, msg: "Please fill all fields" });
+    return res.status(400).json({ success: false, msg: "Please fill all fields" });
   }
 
-  const userExist = await userModel.findOne({ email });
-        if (!userExist) {
-          console.error("Login attempt with unknown email:", email);
-          return res.status(401).json({ message: "Invalid email or password" });
-        }
-
   try {
-    const user = await userModel.findOne({ email: email });
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!user || !isMatch) {
+    if (!isMatch) {
       return res.status(400).json({ success: false, msg: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ id: user._id,role:user.role }, process.env.JWT_SECRET, {
+    // Generate JWT token
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV == "production",
-      sameSite: process.env.NODE_ENV == "production" ? "none" : "strict",
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+    // Remove old tokens
+    await Token.deleteMany({ userId: user._id });
+
+    // Save new token in DB
+    await new Token({ userId: user._id, token }).save();
+
+    // ✅ Send token + role to frontend
+    return res.json({ 
+      success: true, 
+      token, 
+      role: user.role,
+      message: "Login successful"
     });
 
-    return res.json({ success: true });
   } catch (error) {
     return res.json({ success: false, msg: error.message });
   }
@@ -48,17 +50,30 @@ export const loginUser = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV == "production",
-      sameSite: process.env.NODE_ENV == "production" ? "none" : "strict",
-    });
-    redirect('/login');
-    return res.json({ success: true, message: "logout" });
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+
+    if (!token) {
+      return res.status(400).json({ message: "No token provided" }); // Explicitly send 400
+    }
+
+    // Example: Remove token from database (replace with your logic)
+    // await Token.deleteOne({ token });
+
+    // Example: Validate token (replace with your logic)
+    // try{
+    //   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // } catch (error){
+    //   return res.status(400).json({message: "Invalid token"});
+    // }
+
+    console.log("Token removed successfully (or validated)");
+    res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    return res.json({ success: false, msg: error.message });
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Internal server error" }); // Send 500 for server errors
   }
 };
+
 
 export const isAuthenticated = async (req, res) => {
     try {
@@ -150,65 +165,52 @@ export const resetPassword = async (req, res) => {
 
 export const getProfile = async (req, res) => {
   try {
-    // Get token from the Authorization header
-    const token = req.cookies?.token;
-    
+    // Get token from Authorization header
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
+
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Fetch user data from the database using the decoded user ID
-    const user = await userModel.findById(decoded.id);
-    // console.log("USER IS THERE?    " , user);
+    // Fetch user data from DB using the decoded user ID
+    const user = await userModel.findById(decoded.id).select("-password"); // Exclude password
 
     if (!user) {
-      console.log("No user found for ID:", decoded.id);
       return res.status(404).json({ message: "User not found" });
     }
-    const userId = user._id; 
-    res.status(200).json(userId);
+
+    res.status(200).json({ user });
   } catch (error) {
     console.error("Error fetching profile:", error);
-
-    if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ message: "Invalid token" });
-    }
-
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expired" });
-    }
-
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
 export const userRole = async (req, res) => {
-  // console.log("User Role Called");
-    try {
-      // Check if token exists in cookies
-      const token = req.cookies?.token;
-      if (!token) {
-        return res.json({ role: "guest" }); // If no token, treat as guest
-      }
-  
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  
-      // Fetch user from database
-      const user = await userModel.findById(decoded.id);
-  
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-  
-      // console.log(user);
-      // Send user role as response
-      return res.json({ role: user.role }); // Should return "admin" or "user"
-  
-    } catch (error) {
-      console.error("Error verifying token:", error);
-      return res.status(401).json({ message: "Invalid token" });
+  try {
+    // Get token from Authorization header
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+
+    if (!token) {
+      return res.json({ role: "guest" });
     }
-}
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Fetch user from DB
+    const user = await userModel.findById(decoded.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.json({ role: user.role }); // Return "admin" or "member"
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};

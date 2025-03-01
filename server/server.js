@@ -7,15 +7,13 @@ import dotenv from "dotenv";
 import adminRoutes from './routes/adminRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 // import userRoutes from './routes/userRoutes.js'
-import cookieParser  from "cookie-parser";
 import authenticate from './middleware/userAuth.js';
+
 
 dotenv.config();
 
 connectDB();
 const app = express();
-app.use(cookieParser());
-
 app.use(cors({
   origin: `${process.env.FRONT_URL}`, // Your frontend URL
   credentials: true, // Important for cookies
@@ -25,7 +23,6 @@ app.use(cors({
 }));
 app.use(express.urlencoded({ extended: false}));
 app.use(express.json());
-app.use(cookieParser());
 // app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // app.use(express.static(path.join(__dirname, '../client/dist')));

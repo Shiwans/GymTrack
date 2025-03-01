@@ -14,13 +14,14 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
 },
+address: { type: String }, // Add this
 password: {
   type: String,
   // default:"",
   required: true,
 },
   firstName: { 
-    type: String, 
+    type: String,
     required: true 
   },
   lastName: { 

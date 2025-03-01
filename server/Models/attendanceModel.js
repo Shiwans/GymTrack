@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const attendanceSchema = new mongoose.Schema(
   {
@@ -13,6 +13,7 @@ const attendanceSchema = new mongoose.Schema(
       {
         date: { type: Date, required: true }, // Store only present days
         shift: { type: String, enum: ["morning", "evening"], required: true },
+        present: { type: Boolean, default: true },
       },
     ],
 
@@ -21,4 +22,5 @@ const attendanceSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Attendance", attendanceSchema);
+const Attendance  =mongoose.model("Attendance", attendanceSchema);
+export default Attendance;

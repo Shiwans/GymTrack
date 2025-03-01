@@ -1,44 +1,94 @@
-// import { createContext, useContext, useState, useEffect } from "react";
-// import Cookies from "js-cookie";
+import { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-// // Create AuthContext
-// const AuthContext = createContext();
+const AuthContext = createContext();
 
-// // Custom hook to use AuthContext
-// export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext);
 
-// export const AuthProvider = ({ children }) => {
-//   // Store authentication state
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [userRole, setUserRole] = useState(null);
+export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const [token, setToken] = useState(() => {
+    try {
+      return localStorage.getItem("token") || null;
+    } catch (error) {
+      console.error("Error accessing localStorage:", error);
+      return null;
+    }
+  });
+  const [role, setRole] = useState(() => {
+    try {
+      return localStorage.getItem("role") || null;
+    } catch (error) {
+      console.error("Error accessing localStorage:", error);
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(true);
 
-//   // Check for stored authentication state on app load
-//   useEffect(() => {
-//     const storedUser = Cookies.get("user");
-//     if (storedUser) {
-//       const user = JSON.parse(storedUser);
-//       setIsAuthenticated(true);
-//       setUserRole(user.role);
-//     }
-//   }, []);
+  console.log("Initial token state:", token);
+  console.log("Initial role state:", role);
 
-//   // Function to log in user
-//   const login = (user) => {
-//     Cookies.set("user", JSON.stringify(user), { expires: 1, secure: true, sameSite: "Strict" }); // Expires in 1 day
-//     setIsAuthenticated(true);
-//     setUserRole(user.role);
-//   };
+  const authRequest = axios.create({
+    baseURL: import.meta.env.VITE_BACK_URL,
+  });
 
-//   // Function to log out user
-//   const logout = () => {
-//     Cookies.remove("user");
-//     setIsAuthenticated(false);
-//     setUserRole(null);
-//   };
+  useEffect(() => {
+    try {
+      if (token && role) {
+        authRequest.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      } else {
+        delete authRequest.defaults.headers.common["Authorization"];
+      }
+    } catch (error) {
+      console.error("Error setting headers:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [token, role]);
 
-//   return (
-//     <AuthContext.Provider value={{ isAuthenticated, userRole, login, logout }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
+  const login = (newToken, newRole) => {
+    try {
+      localStorage.setItem("token", newToken);
+      localStorage.setItem("role", newRole);
+      setToken(newToken);
+      setRole(newRole);
+    } catch (error) {
+      console.error("Error storing token:", error);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const response = await authRequest.post("/auth/logout");
+        if (response.status !== 200) {
+          console.error("Logout failed with status:", response.status);
+          console.error("Logout response data:", response.data);
+          throw new Error("Logout failed");
+        }
+      }
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      setToken(null);
+      setRole(null);
+      navigate('/login');
+    } catch (error) {
+      console.error("Logout error details:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      setToken(null);
+      setRole(null);
+      navigate('/login');
+    }
+  };
+
+  return (
+    <AuthContext.Provider value={{ token, role, login, logout, authRequest, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export default AuthProvider;

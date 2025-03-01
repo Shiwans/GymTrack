@@ -8,25 +8,29 @@ import x from "../assets/X.svg";
 
 const Footer = () => {
   return (
-    <>
-      {/* <img class="" src={footlogo}></img> */}
-      <div class="flex gap-95">
-        <img src={footlogo}></img>
-        <div class="flex gap-10">
-          <img src={facebook}></img>
-          <img src={facebook}></img>
-          <img src={facebook}></img>
-          <img src={facebook}></img>
-          <img src={facebook}></img>
+    <footer className="bg-gray-900 text-white py-6">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
+        {/* Logo */}
+        <img src={footlogo} alt="Footer Logo" className="h-12" />
+
+        {/* Social Icons */}
+        <div className="flex gap-4 mt-4 md:mt-0">
+          <img src={facebook} alt="Facebook" className="h-6 cursor-pointer" />
+          <img src={instagram} alt="Instagram" className="h-6 cursor-pointer" />
+          <img src={youtube} alt="YouTube" className="h-6 cursor-pointer" />
+          <img src={linkedin} alt="LinkedIn" className="h-6 cursor-pointer" />
+          <img src={x} alt="Twitter/X" className="h-6 cursor-pointer" />
         </div>
       </div>
-      <hr></hr>
-      <div className="flex">
-        <h3>2025 Shiwans Vaishya. All rights reserved</h3>
-        <h3>Privacy Policy</h3>
-        <h3>Terms and Condition</h3>
+
+      {/* Divider */}
+      <hr className="border-gray-700 my-4" />
+
+      {/* Bottom Section */}
+      <div className="text-center text-sm">
+        <p>© 2025 Shiwans Vaishya. All rights reserved.</p>
       </div>
-    </>
+    </footer>
   );
 };
 
