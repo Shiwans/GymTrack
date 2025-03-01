@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     try {
       return localStorage.getItem("token") || null;
     } catch (error) {
-      console.error("Error accessing localStorage:", error);
+      console.error("Error accessing localStorage (token):", error);
       return null;
     }
   });
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     try {
       return localStorage.getItem("role") || null;
     } catch (error) {
-      console.error("Error accessing localStorage:", error);
+      console.error("Error accessing localStorage (role):", error);
       return null;
     }
   });
@@ -32,19 +32,43 @@ export const AuthProvider = ({ children }) => {
   const authRequest = axios.create({
     baseURL: import.meta.env.VITE_BACK_URL,
   });
+  useEffect(() => {
+    const setAuthHeaders = () => {
+      try {
+        if (token && role) {
+          console.log("Setting Authorization header with token:", token);
+          console.log("authRequest headers before set:", authRequest.defaults.headers);
+          authRequest.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+          console.log("authRequest headers after set:", authRequest.defaults.headers);
+        } else {
+          delete authRequest.defaults.headers.common["Authorization"];
+        }
+      } catch (error) {
+        console.error("Error setting headers:", error);
+      }
+    };
+  
+    setAuthHeaders();
+    setLoading(false);
+  }, [token, role]);
+
 
   useEffect(() => {
-    try {
-      if (token && role) {
-        authRequest.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      } else {
-        delete authRequest.defaults.headers.common["Authorization"];
+    const setAuthHeaders = () => {
+      try {
+        if (token && role) {
+          console.log("Setting Authorization header with token:", token);
+          authRequest.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        } else {
+          delete authRequest.defaults.headers.common["Authorization"];
+        }
+      } catch (error) {
+        console.error("Error setting headers:", error);
       }
-    } catch (error) {
-      console.error("Error setting headers:", error);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    setAuthHeaders();
+    setLoading(false);
   }, [token, role]);
 
   const login = (newToken, newRole) => {
@@ -53,6 +77,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("role", newRole);
       setToken(newToken);
       setRole(newRole);
+      console.log("Token after login:", newToken);
+      console.log("Role after login:", newRole);
     } catch (error) {
       console.error("Error storing token:", error);
     }
@@ -60,7 +86,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const token = localStorage.getItem("token");
       if (token) {
         const response = await authRequest.post("/auth/logout");
         if (response.status !== 200) {
@@ -73,19 +98,21 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("role");
       setToken(null);
       setRole(null);
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
       console.error("Logout error details:", error);
       localStorage.removeItem("token");
       localStorage.removeItem("role");
       setToken(null);
       setRole(null);
-      navigate('/login');
+      navigate("/login");
     }
   };
 
   return (
-    <AuthContext.Provider value={{ token, role, login, logout, authRequest, loading }}>
+    <AuthContext.Provider
+      value={{ token, role, login, logout, authRequest, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );

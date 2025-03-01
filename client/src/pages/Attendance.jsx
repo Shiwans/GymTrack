@@ -38,9 +38,12 @@ const Attendance = () => {
 
   const handleScan = async (data) => {
     try {
+      const now = new Date();
+    const hour = now.getHours();
+    const shift = hour < 12 ? "morning" : "evening";
       const response = await axios.post(
         "http://localhost:5555/auth/mark",
-        { qrCode: data },
+        { qrCode: data,shift },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
       setScanResult(response.data.message);

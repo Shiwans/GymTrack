@@ -18,7 +18,8 @@ const Header = () => {
   }
 
   return (
-    <nav className="flex justify-between items-center py-4 px-12 bg-gray-900 text-white shadow-md">
+    <nav className="sticky top-0 z-50 flex justify-between items-center py-4 px-12 bg-gray-900 text-white shadow-md">
+      {/* Added "sticky top-0 z-50" to the nav element */}
       <div className="flex items-center">
         <img className="h-12 w-auto" src={logo} alt="Logo" />
       </div>

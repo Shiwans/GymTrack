@@ -13,7 +13,7 @@ authRoutes.post('/set-password', resetPassword);
 authRoutes.post("/mark", authenticate, async (req, res) => {
   try {
     const { qrCode } = req.body;
-    const timestamp = Math.floor(Date.now() / (1000 * 120)); // Calculate timestamp for 2-minute window
+    const timestamp = Math.floor(Date.now() / (1000 * 120));
     const expectedCode = `GYM-${timestamp}`;
 
     if (qrCode !== expectedCode) {
@@ -41,7 +41,6 @@ authRoutes.post("/mark", authenticate, async (req, res) => {
       month: today.slice(0, 7), // "YYYY-MM"
       "attendance.date": new Date(today),
     });
-
     if (existingAttendance) {
       return res.status(400).json({ success: false, message: "Attendance already marked today" });
     }
@@ -62,6 +61,6 @@ authRoutes.post("/mark", authenticate, async (req, res) => {
     res.status(500).json({ success: false, message: "Error marking attendance" });
   }
 });
-
+  
 
 export default authRoutes;

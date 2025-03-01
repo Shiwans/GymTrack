@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaEdit, FaTrash, FaSync } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext"; // Use custom hook
 import erick from "../assets/erick.jpg";
+import axios from 'axios'
 
 // Fetch members function
 const fetchMembers = async (authRequest) => {
@@ -12,15 +13,41 @@ const fetchMembers = async (authRequest) => {
 
 export default function MemberTable() {
   const [search, setSearch] = useState("");
-  const { authRequest } = useAuth(); // Get authenticated request function
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [members,setMembers] = useState([])
+  const { authRequest,token } = useAuth(); // Get authenticated request function
   const queryClient = useQueryClient();
 
   // Fetch members using React Query
-  const { data: members = [], isLoading, error } = useQuery({
-    queryKey: ["members"],
-    queryFn: () => fetchMembers(authRequest),
-  });
 
+  useEffect(() => {
+    const fetchMembers = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        if (!token) {
+          setError('Token is missing!');
+          return;
+        }
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACK_URL}/admin/members`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setMembers(response.data.members); // Assuming the array is in response.data.members
+      } catch (err) {
+        setError(err.message || 'Failed to fetch members');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchMembers();
+  }, [token]);
   // Handle delete function
   // const handleDelete = async (id) => {
   //   try {
@@ -30,6 +57,13 @@ export default function MemberTable() {
   //     console.error("Error deleting member:", error);
   //   }
   // };
+  if (isLoading) {
+    return <div>Loading members...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">

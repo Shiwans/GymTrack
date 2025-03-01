@@ -17,6 +17,8 @@ import Footer from "./components/Footer";
 import Leaderboard from "./pages/Leaderboard";
 import { PrivateRoute } from "./PrivateRoutes.jsx";
 import { useAuth } from "./context/AuthContext";
+import Holiday from "./pages/Holiday.jsx";
+// import ManualAttendanceModal from "./pages/ManualAttendanceModal.jsx";
 
 const App = () => {
   const { token } = useAuth();
@@ -32,6 +34,8 @@ const App = () => {
         <Route path="/data" element={<PrivateRoute element={<Data />} />} />
         <Route path="/leaderboard" element={<PrivateRoute element={<Leaderboard />} />} />
         <Route path="/dashboard" element={<PrivateRoute requiredRole="admin" element={<Dashboard />} />} />
+        <Route path="/holiday" element={<PrivateRoute requiredRole="admin" element={<Holiday />} />} />
+        {/* <Route path="/manualattendance" element={<PrivateRoute requiredRole="admin" element={<ManualAttendanceModal />} />} /> */}
         <Route path="/mark-attendance" element={<PrivateRoute requiredRole="admin" element={<MarkAttendance />} />} />
         <Route path="/members" element={<PrivateRoute requiredRole="admin" element={<Members />} />} />
         <Route path="/add-members" element={<PrivateRoute requiredRole="admin" element={<AddMembers />} />} />
