@@ -1,22 +1,17 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FaEdit, FaTrash, FaSync } from "react-icons/fa";
+import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext"; // Use custom hook
 import erick from "../assets/erick.jpg";
-import axios from 'axios'
-
-// Fetch members function
-const fetchMembers = async (authRequest) => {
-  const { data } = await authRequest.get("/admin/members");
-  return data.members;
-};
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function MemberTable() {
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [members,setMembers] = useState([])
-  const { authRequest,token } = useAuth(); // Get authenticated request function
+  const [members, setMembers] = useState([]);
+  const { authRequest, token } = useAuth(); // Get authenticated request function
   const queryClient = useQueryClient();
 
   // Fetch members using React Query
@@ -27,7 +22,7 @@ export default function MemberTable() {
       setError(null);
       try {
         if (!token) {
-          setError('Token is missing!');
+          setError("Token is missing!");
           return;
         }
         const response = await axios.get(
@@ -40,23 +35,39 @@ export default function MemberTable() {
         );
         setMembers(response.data.members); // Assuming the array is in response.data.members
       } catch (err) {
-        setError(err.message || 'Failed to fetch members');
+        setError(err.message || "Failed to fetch members");
       } finally {
         setIsLoading(false);
       }
     };
-  
+
     fetchMembers();
   }, [token]);
   // Handle delete function
-  // const handleDelete = async (id) => {
-  //   try {
-  //     await authRequest.delete(`/admin/members/${id}`);
-  //     queryClient.invalidateQueries(["members"]); // Refresh data
-  //   } catch (error) {
-  //     console.error("Error deleting member:", error);
-  //   }
-  // };
+  const handleDelete = async (id) => {
+    const queryClient = useQueryClient(); // Get queryClient
+    const { token } = useAuth(); // Get token from context
+  
+    try {
+      if (!token) {
+        console.error('Token is missing!');
+        return;
+      }
+  
+      await axios.delete(`${import.meta.env.VITE_BACK_URL}/admin/members/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      queryClient.invalidateQueries(['members']); // Refresh data
+    } catch (error) {
+      console.error('Error deleting member:', error);
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error details:', error.response ? error.response.data : error.message);
+      }
+    }
+  };
   if (isLoading) {
     return <div>Loading members...</div>;
   }
@@ -75,12 +86,18 @@ export default function MemberTable() {
             className="p-2 border rounded-lg w-1/3"
             onChange={(e) => setSearch(e.target.value)}
           />
-          <button className="bg-purple-600 text-white px-4 py-2 rounded-lg">+ Add Member</button>
+          <Link to="/add-members">
+            <button className="bg-purple-600 text-white px-4 py-2 rounded-lg">
+              + Add Member
+            </button>
+          </Link>
         </div>
         {isLoading ? (
           <p className="text-center mt-5">Loading...</p>
         ) : error ? (
-          <p className="text-center mt-5 text-red-500">Error: {error.message}</p>
+          <p className="text-center mt-5 text-red-500">
+            Error: {error.message}
+          </p>
         ) : (
           <table className="w-full border-collapse">
             <thead>
@@ -97,17 +114,27 @@ export default function MemberTable() {
             </thead>
             <tbody>
               {members
-                .filter((member) => member.firstName.toLowerCase().includes(search.toLowerCase()))
+                .filter((member) =>
+                  member.firstName.toLowerCase().includes(search.toLowerCase())
+                )
                 .map((member) => (
-                  <tr key={member.id} className="border-b">
+                  <tr key={member._id} className="border-b">
                     <td className="p-2">{member.Id}</td>
                     <td className="p-2">
-                      <img src={member.image || erick} alt="Profile" className="w-10 h-10 rounded-full" />
+                      <img
+                        src={member.pic || erick}
+                        alt="Profile"
+                        className="w-10 h-10 rounded-full"
+                      />
                     </td>
                     <td className="p-2">{member.firstName}</td>
                     <td className="p-2">{member.age || "N/A"}</td>
                     <td className="p-2">{member.package || "N/A"}</td>
-                    <td className="p-2">{member.expiresOn || "N/A"}</td>
+                    <td className="p-2">
+                      {member.expiresOn
+                        ? new Date(member.expiresOn).toLocaleDateString()
+                        : "N/A"}
+                    </td>
                     <td className="p-2">
                       <span
                         className={`px-2 py-1 rounded-lg text-sm ${
@@ -116,19 +143,22 @@ export default function MemberTable() {
                             : "bg-green-200 text-green-600"
                         }`}
                       >
-                        {member.status || "Active"}
+                        {member.status}
                       </span>
                     </td>
                     <td className="p-2 flex space-x-2">
-                      <button className="text-blue-500 hover:text-blue-700">
-                        <FaEdit />
-                      </button>
-                      <button className="text-red-500 hover:text-red-700" onClick={() => handleDelete(member.id)}>
+                      <Link to={`/admin/members/${member._id}/edit`}>
+                        <FaEdit className="text-blue-500 hover:text-blue-700 cursor-pointer" />
+                      </Link>
+                      <button
+                        className="text-red-500 hover:text-red-700 cursor-pointer"
+                        onClick={() => handleDelete(member._id)}
+                      >
                         <FaTrash />
                       </button>
-                      <button className="text-gray-500 hover:text-gray-700">
-                        <FaSync />
-                      </button>
+                      <Link to={`/admin/members/${member._id}`}>
+                        <FaEye className="text-gray-500 hover:text-gray-700 cursor-pointer" />
+                      </Link>
                     </td>
                   </tr>
                 ))}

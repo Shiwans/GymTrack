@@ -1,4 +1,5 @@
 import React from 'react';
+import abouti from '../assets/abouti.png'
 
 const AboutPage = () => {
   return (
@@ -6,11 +7,6 @@ const AboutPage = () => {
       {/* Hero Section with Navigation */}
       <section className="relative h-64 bg-gray-800 text-white">
         <div className="absolute inset-0 bg-black opacity-40"></div>
-        <img 
-          src="/api/placeholder/1200/400" 
-          alt="People exercising in a gym" 
-          className="absolute inset-0 w-full h-full object-cover"
-        />
         <div className="relative z-10 flex flex-col items-center justify-center h-full">
           <h1 className="text-4xl font-bold mb-8">About</h1>
           <div className="flex space-x-8">
@@ -42,11 +38,11 @@ const AboutPage = () => {
           <div className="md:w-1/3 mt-6 md:mt-0">
             <div className="relative h-64 md:h-auto">
               <img 
-                src="/api/placeholder/400/500" 
+                src={abouti} 
                 alt="Fitness equipment" 
                 className="w-full h-full object-cover rounded"
               />
-              <div className="absolute inset-0 border-2 border-orange-500 rounded transform translate-x-4 translate-y-4 z-0"></div>
+              {/* <div className="absolute inset-0 border-2 border-orange-500 rounded transform translate-x-4 translate-y-4 z-0"></div> */}
             </div>
           </div>
         </div>
@@ -215,11 +211,6 @@ const AboutPage = () => {
         
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2 pr-0 md:pr-8">
-            <img 
-              src="/api/placeholder/600/400" 
-              alt="Map location" 
-              className="w-full h-64 object-cover mb-4"
-            />
           </div>
           <div className="md:w-1/2">
             <div className="bg-white p-6 border border-gray-200 rounded shadow-md">
@@ -227,55 +218,11 @@ const AboutPage = () => {
               <p className="font-medium mb-1">FitLife Studio</p>
               <p className="text-gray-600 mb-1">Shivanagar near metro Station</p>
               <p className="text-gray-600 mb-4">Pimpri - 400017</p>
-              <button className="text-orange-500 hover:underline mb-4 inline-flex items-center">
-                <span>View Map</span>
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
-              </button>
+            
             </div>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 px-4 mt-auto">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between">
-          <div className="mb-6 md:mb-0">
-            <h3 className="text-xl font-bold mb-2">Shivaji Vyam Shala</h3>
-            <p className="text-gray-400">Strength. Courage. Legacy.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-            <div>
-              <h4 className="font-bold mb-2">Quick Links</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white">Home</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">About</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Classes</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Pricing</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-2">Contact</h4>
-              <ul className="space-y-2">
-                <li className="text-gray-400">Pimpri, Pune</li>
-                <li className="text-gray-400">+91 98765 43210</li>
-                <li className="text-gray-400">info@shivajigyam.com</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-2">Hours</h4>
-              <ul className="space-y-2">
-                <li className="text-gray-400">Mon-Fri: 5:00 AM - 10:00 PM</li>
-                <li className="text-gray-400">Sat-Sun: 6:00 AM - 8:00 PM</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-6xl mx-auto border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2025 Shivaji Vyam Shala. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 };

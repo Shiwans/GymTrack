@@ -4,17 +4,29 @@ import bcrypt from "bcryptjs";
 
 export const getMembers = async (req, res) => {
   try {
-    const members = await User.find();
-    if (members.length === 0) {
-        // console.error("No Members found");
-        return res.status(404).json({ message: "No Members found" });
-      }
-  
-      res.status(200).json({ message: "Members fetched", members });
-    } catch (error) {
-      console.error("Error fetching members:", error);
-      res.status(500).json({ message: "Unable to fetch members", error });
-    }
+    const users = await User.find();
+    const membersWithDetails = await Promise.all(users.map(async (user) => {
+        const latestMembership = await Membership.findOne({ userId: user._id }).sort({ endDate: -1 });
+        let packageType = "N/A";
+        let expiresOn = "N/A";
+        let status = "N/A";
+        if (latestMembership) {
+            packageType = latestMembership.membershipType;
+            expiresOn = latestMembership.endDate;
+            status = latestMembership.endDate > new Date() ? "Active" : "Expired";
+        }
+        return {
+            ...user.toObject(),
+            package: packageType,
+            expiresOn: expiresOn,
+            status: status,
+        };
+    }));
+    res.json({ members: membersWithDetails });
+} catch (error) {
+    console.error("Error fetching members with details:", error);
+    res.status(500).json({ message: "Failed to fetch members" });
+}
 };
 
 export const addMember = async (req, res) => {

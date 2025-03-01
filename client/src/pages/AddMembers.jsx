@@ -175,23 +175,24 @@ const AddMembers = () => {
               />
             </div>
 
-            <div className="mt-3 flex gap-2 w-full">
+            {/* images  */}
+            {/* <div className="mt-3 flex gap-2 w-full">
               <button className="w-1/2 px-2 py-2 border rounded-lg text-sm">
                 Upload photo
               </button>
               <button className="w-1/2 px-2 py-2 border rounded-lg text-sm">
                 Take photo
               </button>
-            </div>
+            </div> */}
 
             {/* Buttons */}
             <div className="mt-5 flex flex-col gap-2 w-full">
-              <button className="border px-4 py-3 rounded-lg hover:bg-gray-100 transition">
+              {/* <button className="border px-4 py-3 rounded-lg hover:bg-gray-100 transition">
                 Check In
-              </button>
-              <button className="border px-4 py-3 rounded-lg hover:bg-gray-100 transition">
+              </button> */}
+              {/* <button className="border px-4 py-3 rounded-lg hover:bg-gray-100 transition">
                 Prev Bookings
-              </button>
+              </button> */}
               <button className="border px-4 py-3 rounded-lg hover:bg-gray-100 transition">
                 Renew
               </button>

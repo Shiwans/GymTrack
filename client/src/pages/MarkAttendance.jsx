@@ -11,7 +11,7 @@ const MarkAttendance = () => {
   const [loading, setLoading] = useState(true);
   const [showManualModal, setShowManualModal] = useState(false);
   const { authRequest, token } = useAuth(); // Destructure token here
-  const [totalMembers, setTotalMembers] = useState(0); // Sta
+  // const [totalMembers, setTotalMembers] = useState(0); // Sta
   const [presentCount, setPresentCount] = useState(0); // State for present count
   const [unmarkedCount, setUnmarkedCount] = useState(0);
   const formatDate = (date) => {
@@ -37,15 +37,15 @@ const MarkAttendance = () => {
           alert("You are not logged in!");
           return;
         }
-        const membersResponse = await axios.get(
-          `${import.meta.env.VITE_BACK_URL}/admin/members/count`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setTotalMembers(membersResponse.data.count);
+        // const membersResponse = await axios.get(
+        //   `${import.meta.env.VITE_BACK_URL}/admin/members/count`,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
+        // setTotalMembers(membersResponse.data.count);
 
 
         const response = await axios.get(

@@ -4,6 +4,8 @@ import authenticate from '../middleware/userAuth.js';
 import Membership from "../Models/membershipModel.js"; // Import Membership model
 import Attendance from "../Models/attendanceModel.js"; // Import Attendance model
 import Holiday from "../Models/holidayModel.js"; // Import Holiday model
+import moment from 'moment-timezone';
+
 
 const authRoutes = express.Router();
 authRoutes.post('/login', loginUser);
@@ -30,10 +32,23 @@ authRoutes.post("/mark", authenticate, async (req, res) => {
     }
 
     // Check membership
-    const membership = await Membership.findOne({ userId, isActive: true });
-    if (!membership || new Date() > membership.endDate) {
-      return res.status(403).json({ success: false, message: "Membership expired! Please renew." });
-    }
+   // Check membership
+// const membership = await Membership.findOne({ userId, isActive: true });
+// if (!membership || new Date() > membership.endDate) {
+//   return res.status(403).json({ success: false, message: "Membership expired! Please renew." });
+// }
+// const membership = await Membership.findOne({ userId, isActive: true });
+// if (!membership) { // Check if membership exists
+//   return res.status(403).json({ success: false, message: "No active membership found." });
+// }
+
+// const serverTimeZone = 'Asia/Kolkata'; // Replace with your server's time zone
+// const endDate = moment(membership.endDate).tz(serverTimeZone);
+// const now = moment().tz(serverTimeZone);
+
+// if (now.isAfter(endDate)) {
+//   return res.status(403).json({ success: false, message: "Membership expired! Please renew." });
+// }
 
     // Check for duplicate attendance
     const existingAttendance = await Attendance.findOne({

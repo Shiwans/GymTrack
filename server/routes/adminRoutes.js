@@ -5,6 +5,7 @@ import adminAuth from '../middleware/adminAuth.js'
 import Attendance from '../Models/attendanceModel.js';
 import Holiday from '../Models/holidayModel.js';
 import User from '../Models/userModel.js'
+import Membership from '../Models/membershipModel.js';
 const adminRouter = express.Router();
 
 adminRouter.use(adminAuth);
@@ -26,6 +27,14 @@ adminRouter.get("/generate", async (req, res) => {
       console.error("Error generating QR Code:", error);
       res.status(500).json({ success: false, message: "Failed to generate QR code" });
     }
+    // try {
+  //     const uniqueCode = `GYM-${uuidv4()}`;
+  //     const qrCodeDataURL = await QRCode.toDataURL(uniqueCode);
+  //     res.json({ success: true, qrCode: qrCodeDataURL, uniqueCode });
+  // } catch (error) {
+  //     console.error("Error generating QR Code:", error);
+  //     res.status(500).json({ success: false, message: "Failed to generate QR code" });
+  // }
   });
 
   adminRouter.get('/attendance',adminAuth,async (req, res) => {
@@ -171,4 +180,45 @@ adminRouter.get("/generate", async (req, res) => {
 //         res.status(500).json({ message: "Internal server error", error: error.message });
 //     }
 // });
+
+
+adminRouter.get("/members/:memberId", adminAuth, async (req, res) => {
+  try {
+    const memberId = req.params.memberId;
+
+    // Validate memberId (optional)
+    if (!mongoose.Types.ObjectId.isValid(memberId)) {
+        return res.status(400).json({ message: "Invalid member ID" });
+    }
+
+    const member = await User.findById(memberId);
+
+    if (!member) {
+        return res.status(404).json({ message: "Member not found" });
+    }
+
+    const memberships = await Membership.find({ userId: member._id });
+
+    res.json({ member, memberships });
+} catch (error) {
+    console.error("Error fetching member profile:", error);
+    res.status(500).json({ message: "Failed to fetch member profile", error: error.message, stack:error.stack });
+}
+});
+
+// Edit member (similar to view, but you might want to handle updates here)
+// adminRouter.get("/members/:memberId/edit", adminAuth, async (req, res) => {
+//   try {
+//       const memberId = req.params.memberId;
+//       const member = await User.findById(memberId);
+//       if (!member) {
+//           return res.status(404).json({ message: "Member not found" });
+//       }
+//       res.json({ member });
+//   } catch (error) {
+//       console.error("Error fetching member for editing:", error);
+//       res.status(500).json({ message: "Failed to fetch member for editing" });
+//   }
+// });
+
 export default adminRouter;
