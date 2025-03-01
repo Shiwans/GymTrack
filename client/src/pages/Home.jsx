@@ -1,5 +1,5 @@
 import React from "react";
-import "./home.css";
+import "./Home.css";
 import placeleft from "../assets/placeleft.png";
 import placefull from "../assets/placefull.png";
 import placeright from "../assets/placeright.png";
