@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Edit, Trash2, RotateCcw } from "lucide-react";
-import erick from "../assets/Erick.jpg"
+import erick from "../assets/Erick.jpg";
 import github from "../assets/github.png"
 
 export default function ProfilePage() {
