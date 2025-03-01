@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import erick from "../assets/erick.jpg";
+import erick from "../assets/Erick.jpg";
 import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
