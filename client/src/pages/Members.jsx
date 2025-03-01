@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext"; // Use custom hook
-import erick from "../assets/erick.jpg";
+import erick from "../assets/Erick.jpg";
 import axios from "axios";
 import { Link } from "react-router-dom";
 

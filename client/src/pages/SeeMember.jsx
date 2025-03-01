@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Edit, Trash2, RotateCcw } from "lucide-react";
-import erick from "../assets/erick.jpg";
+import erick from "../assets/Erick.jpg";
 import github from "../assets/github.png";
 import axios from "axios";
 import { useParams } from "react-router-dom";
